@@ -1,4 +1,4 @@
-/// <summary>
+    /// <summary>
     /// Defines a flexible grid area that consists of columns and rows.
     /// Depending on the orientation, either the rows or the columns are auto-generated,
     /// and the children's position is set according to their index.
@@ -38,9 +38,9 @@
         /// <summary>
         /// Gets or sets the column count
         /// </summary>
-        public string ColumnCount
+        public int ColumnCount
         {
-            get { return (string)GetValue(ColumnCountProperty); }
+            get { return (int)GetValue(ColumnCountProperty); }
             set { SetValue(ColumnCountProperty, value); }
         }
 
@@ -56,19 +56,19 @@
         /// <summary>
         /// Gets or sets the fixed column width
         /// </summary>
-        public string FixedColumnWidth
+        public GridLength ColumnWidth
         {
-            get { return (string)GetValue(FixedColumnWidthProperty); }
-            set { SetValue(FixedColumnWidthProperty, value); }
+            get { return (GridLength)GetValue(ColumnWidthProperty); }
+            set { SetValue(ColumnWidthProperty, value); }
         }
 
         /// <summary>
         /// Gets or sets the fixed row height
         /// </summary>
-        public GridLength FixedRowHeight
+        public GridLength RowHeight
         {
-            get { return (GridLength)GetValue(FixedRowHeightProperty); }
-            set { SetValue(FixedRowHeightProperty, value); }
+            get { return (GridLength)GetValue(RowHeightProperty); }
+            set { SetValue(RowHeightProperty, value); }
         }
 
         /// <summary>
@@ -303,17 +303,17 @@
         /// <summary>
         /// Sets the default width of all columns. Used to evenly space columns.
         /// </summary>
-        public static readonly DependencyProperty FixedColumnWidthProperty =
-            DependencyProperty.RegisterAttached("FixedColumnWidth", typeof(GridLength), typeof(AutoGrid),
+        public static readonly DependencyProperty ColumnWidthProperty =
+            DependencyProperty.RegisterAttached("ColumnWidth", typeof(GridLength), typeof(AutoGrid),
                 new PropertyMetadata(GridLength.Auto, FixedColumnWidthChanged));
 
         /// <summary>
         /// Specify the fixed row height for all rows
         /// </summary>
-        public static readonly DependencyProperty FixedRowHeightProperty =
-            DependencyProperty.RegisterAttached("FixedRowHeight", typeof(GridLength), typeof(AutoGrid),
+        public static readonly DependencyProperty RowHeightProperty =
+            DependencyProperty.RegisterAttached("RowHeight", typeof(GridLength), typeof(AutoGrid),
                 new PropertyMetadata(GridLength.Auto, FixedRowHeightChanged));
-
+         
         /// <summary>
         /// Identifies the <see cref="IsAutoIndexing"/> dependency property.
         /// </summary>
@@ -357,7 +357,7 @@
         /// </summary>
         /// <param name="constraint">Indicates an upper limit size that should not be exceeded.</param>
         /// <returns>
-        ///   <see cref="Size"/> that represents the required size to arrange child content.
+        ///     <see cref="Size"/> that represents the required size to arrange child content.
         /// </returns>
         protected override Size MeasureOverride(Size constraint)
         {
@@ -461,3 +461,4 @@
 
         #endregion Overrides
     }
+
