@@ -3,7 +3,7 @@ wpf-autogrid
 
 A flexible, easy to configure replacement for the standard WPF Grid control
 
-AutoGrid lets you reduce the amount of xaml when using grids for layout.
+AutoGrid lets you reduce the amount of xaml when using grids for layout by allowing you to define rows and columns as simple properties and alleviating you from having to explicitly specify the row and column a child control belongs to.
 
 #### Standard WPF Grid
 
