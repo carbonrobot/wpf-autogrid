@@ -36,11 +36,47 @@ AutoGrid lets you reduce the amount of xaml when using grids for layout by allow
 </AutoGrid>
 ```
 
-Notice how in the example above we didn't need to specify the row and column that each element belonged to; AutoGrid automatically figures out what row and column we wanted based on our configuration of the grid. AutoGrid uses a column first arrangement for its auto layout convention. 
+Notice how in the example above we didn't need to specify the row and column that each element belonged to; AutoGrid automatically figures out what row and column we wanted based on our configuration of the grid. AutoGrid uses a row first or column first arrangement for its auto layout which can changed by setting the Orientation property. 
 
 Don't want AutoGrid to position elements automatically? **OK**
 
 Explicit assignment of columns and rows still works too. This allows you to upgrade more easily. Most of time you can mix both without much trouble, but take care that this is not always the case.
 
+#### Defining a even spaced 6x6 grid with a default margin of 10 for all cells
 
+```
+<local:AutoGrid ColumnCount="6" ColumnWidth="*" RowHeight="*" RowCount="6" ChildMargin="10" />
+```
+
+#### Grid with relative based column widths and fixed row height
+
+```
+<local:AutoGrid Columns="2*,5*" RowCount="6" RowHeight="25" />
+```
+
+#### Orientation="Horizontal" (default)
+
+In this example, labels will fall in the first column, and textboxes will be in the second column
+
+```
+<AutoGrid RowCount="2" RowHeight="35" Columns="100,auto">
+  <Label />     <!-- Col=0, Row=0 -->
+  <TextBox />   <!-- Col=1, Row=0 -->
+  <Label />     <!-- Col=0, Row=1 -->
+  <TextBox />   <!-- Col=1, Row=1 -->
+</AutoGrid>
+```
+
+#### Orientation="Vertical"
+
+In this example, labels will fall in the first row, and textboxes will be in the second row
+
+```
+<AutoGrid RowCount="2" RowHeight="35" Columns="100,auto" Orientation="Vertical">
+  <Label />     <!-- Col=0, Row=0 -->
+  <TextBox />   <!-- Col=0, Row=1 -->
+  <Label />     <!-- Col=1, Row=0 -->
+  <TextBox />   <!-- Col=1, Row=1 -->
+</AutoGrid>
+```
 
