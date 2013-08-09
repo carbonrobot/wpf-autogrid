@@ -5,6 +5,8 @@ A flexible, easy to configure replacement for the standard WPF Grid control
 
 AutoGrid lets you reduce the amount of xaml when using grids for layout by allowing you to define rows and columns as simple properties and alleviating you from having to explicitly specify the row and column a child control belongs to.
 
+Partially based on work at http://rachel53461.wordpress.com/2011/09/17/wpf-grids-rowcolumn-count-properties/
+
 #### Standard WPF Grid
 
 ```
