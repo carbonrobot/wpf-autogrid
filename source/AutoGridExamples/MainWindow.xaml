@@ -35,14 +35,28 @@
             </local:AutoGrid>
 
             <!-- Rowspan Tests -->
-            <local:AutoGrid ColumnCount="1"
+            <local:AutoGrid ColumnCount="2"
                         ColumnWidth="*"
-                        RowCount="4"
+                        RowCount="2"
                         RowHeight="*"
                         ChildMargin="5">
 
                 <Rectangle Fill="Blue" />
                 <Rectangle Fill="Red" Grid.RowSpan="2" />
+                <Rectangle Fill="Green" />
+
+            </local:AutoGrid>
+
+            <!-- Colspan + Rowspan Tests -->
+            <local:AutoGrid ColumnCount="2"
+                        ColumnWidth="*"
+                        RowCount="3"
+                        RowHeight="*"
+                        ChildMargin="5">
+
+                <Rectangle Fill="Blue" Grid.ColumnSpan="2" />
+                <Rectangle Fill="Red" Grid.RowSpan="2" />
+                <Rectangle Fill="Yellow" />
                 <Rectangle Fill="Green" />
 
             </local:AutoGrid>
