@@ -5,17 +5,47 @@
         Title="MainWindow" Height="350" Width="525">
     <ScrollViewer>
 
-        <local:AutoGrid ColumnCount="2"
+        <UniformGrid>
+            
+            <!-- Grid of 4 colors -->
+            <local:AutoGrid ColumnCount="2"
                         ColumnWidth="*"
                         Rows="1*,3*"
-                        ChildMargin="10">
-            
-            <Rectangle Fill="Blue" />
-            <Rectangle Fill="Red" />
-            <Rectangle Fill="Green" />
-            <Rectangle Fill="Yellow" />
-        
-        </local:AutoGrid>
+                        ChildMargin="5">
 
+                <Rectangle Fill="Blue" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Green" />
+                <Rectangle Fill="Yellow" />
+
+            </local:AutoGrid>
+
+            <!-- Colspan Tests -->
+            <local:AutoGrid ColumnCount="3"
+                        ColumnWidth="*"
+                        RowCount="2"
+                        RowHeight="*"
+                        ChildMargin="5">
+
+                <Rectangle Fill="Blue" Grid.ColumnSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow" />
+                <Rectangle Fill="Green" Grid.ColumnSpan="2" />
+
+            </local:AutoGrid>
+
+            <!-- Rowspan Tests -->
+            <local:AutoGrid ColumnCount="1"
+                        ColumnWidth="*"
+                        RowCount="4"
+                        RowHeight="*"
+                        ChildMargin="5">
+
+                <Rectangle Fill="Blue" />
+                <Rectangle Fill="Red" Grid.RowSpan="2" />
+                <Rectangle Fill="Green" />
+
+            </local:AutoGrid>
+        </UniformGrid>
     </ScrollViewer>
 </Window>
