@@ -9,7 +9,7 @@
     /// Defines a flexible grid area that consists of columns and rows.
     /// Depending on the orientation, either the rows or the columns are auto-generated,
     /// and the children's position is set according to their index.
-    /// 
+    ///
     /// Partially based on work at http://rachel53461.wordpress.com/2011/09/17/wpf-grids-rowcolumn-count-properties/
     /// </summary>
     public class AutoGrid : Grid
@@ -136,12 +136,12 @@
         /// <summary>
         /// Handles the column count changed event
         /// </summary>
-        public static void ColumnCountChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void ColumnCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if ((int)e.NewValue < 0)
                 return;
 
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
 
             // look for an existing column definition for the height
             var width = GridLength.Auto;
@@ -158,12 +158,12 @@
         /// <summary>
         /// Handle the columns changed event
         /// </summary>
-        public static void ColumnsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void ColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if ((string)e.NewValue == string.Empty)
                 return;
 
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
             grid.ColumnDefinitions.Clear();
 
             var defs = Parse((string)e.NewValue);
@@ -174,9 +174,9 @@
         /// <summary>
         /// Handle the fixed column width changed event
         /// </summary>
-        public static void FixedColumnWidthChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void FixedColumnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
 
             // add a default column if missing
             if (grid.ColumnDefinitions.Count == 0)
@@ -190,15 +190,15 @@
         /// <summary>
         /// Handle the fixed row height changed event
         /// </summary>
-        public static void FixedRowHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void FixedRowHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
 
-            // add a default column if missing
+            // add a default row if missing
             if (grid.RowDefinitions.Count == 0)
                 grid.RowDefinitions.Add(new RowDefinition());
 
-            // set all existing columns to this width
+            // set all existing rows to this height
             for (int i = 0; i < grid.RowDefinitions.Count; i++)
                 grid.RowDefinitions[i].Height = (GridLength)e.NewValue;
         }
@@ -241,12 +241,12 @@
         /// <summary>
         /// Handles the row count changed event
         /// </summary>
-        public static void RowCountChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void RowCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if ((int)e.NewValue < 0)
                 return;
 
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
 
             // look for an existing row to get the height
             var height = GridLength.Auto;
@@ -263,12 +263,12 @@
         /// <summary>
         /// Handle the rows changed event
         /// </summary>
-        public static void RowsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        public static void RowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if ((string)e.NewValue == string.Empty)
                 return;
 
-            var grid = obj as AutoGrid;
+            var grid = d as AutoGrid;
             grid.RowDefinitions.Clear();
 
             var defs = Parse((string)e.NewValue);
@@ -277,24 +277,164 @@
         }
 
         /// <summary>
+        /// Called when [child horizontal alignment changed].
+        /// </summary>
+        private static void OnChildHorizontalAlignmentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var grid = d as AutoGrid;
+            foreach (UIElement child in grid.Children)
+            {
+                if (grid.ChildHorizontalAlignment.HasValue)
+                    child.SetValue(FrameworkElement.HorizontalAlignmentProperty, grid.ChildHorizontalAlignment);
+                else
+                    child.SetValue(FrameworkElement.HorizontalAlignmentProperty, DependencyProperty.UnsetValue);
+            }
+        }
+
+        /// <summary>
+        /// Called when [child layout changed].
+        /// </summary>
+        private static void OnChildMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var grid = d as AutoGrid;
+            foreach (UIElement child in grid.Children)
+            {
+                if (grid.ChildMargin.HasValue)
+                    child.SetValue(FrameworkElement.MarginProperty, grid.ChildMargin);
+                else
+                    child.SetValue(FrameworkElement.MarginProperty, DependencyProperty.UnsetValue);
+            }
+        }
+
+        /// <summary>
+        /// Called when [child vertical alignment changed].
+        /// </summary>
+        private static void OnChildVerticalAlignmentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var grid = d as AutoGrid;
+            foreach (UIElement child in grid.Children)
+            {
+                if (grid.ChildVerticalAlignment.HasValue)
+                    child.SetValue(FrameworkElement.VerticalAlignmentProperty, grid.ChildVerticalAlignment);
+                else
+                    child.SetValue(FrameworkElement.VerticalAlignmentProperty, DependencyProperty.UnsetValue);
+            }
+        }
+
+        /// <summary>
         /// Handled the redraw properties changed event
         /// </summary>
-        private static void OnPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((AutoGrid)o)._shouldReindex = true;
+            ((AutoGrid)d).shouldReindex = true;
+        }
+
+        /// <summary>
+        /// Apply child margins and layout effects such as alignment
+        /// </summary>
+        private void ApplyChildLayout(UIElement child)
+        {
+            if (ChildMargin != null)
+            {
+                child.SetIfDefault(FrameworkElement.MarginProperty, ChildMargin.Value);
+            }
+            if (ChildHorizontalAlignment != null)
+            {
+                child.SetIfDefault(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
+            }
+            if (ChildVerticalAlignment != null)
+            {
+                child.SetIfDefault(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
+            }
+        }
+
+        /// <summary>
+        /// Clamp a value to its maximum.
+        /// </summary>
+        private int Clamp(int value, int max)
+        {
+            return (value > max) ? max : value;
+        }
+
+        /// <summary>
+        /// Perform the grid layout of row and column indexes
+        /// </summary>
+        private void PerformLayout()
+        {
+            if (shouldReindex)
+            {
+                shouldReindex = false;
+
+                var fillRowFirst = this.Orientation == Orientation.Horizontal;
+                var rowCount = this.RowDefinitions.Count;
+                var colCount = this.ColumnDefinitions.Count;
+
+                var position = 0;
+                var skip = new bool[rowCount, colCount];
+                foreach (UIElement child in Children)
+                {
+                    if (IsAutoIndexing)
+                    {
+                        if (fillRowFirst)
+                        {
+                            var row = Clamp(position / colCount, rowCount - 1);
+                            var col = Clamp(position % colCount, colCount - 1);
+                            if (skip[row, col])
+                            {
+                                position++;
+                                row = (position / colCount);
+                                col = (position % colCount);
+                            }
+
+                            Grid.SetRow(child, row);
+                            Grid.SetColumn(child, col);
+                            position += Grid.GetColumnSpan(child);
+
+                            var offset = Grid.GetRowSpan(child) - 1;
+                            while (offset > 0)
+                            {
+                                skip[row + offset--, col] = true;
+                            }
+                        }
+                        else
+                        {
+                            var row = Clamp(position % rowCount, rowCount - 1);
+                            var col = Clamp(position / rowCount, colCount - 1);
+                            if (skip[row, col])
+                            {
+                                position++;
+                                row = position % rowCount;
+                                col = position / rowCount;
+                            }
+
+                            Grid.SetRow(child, row);
+                            Grid.SetColumn(child, col);
+                            position += Grid.GetRowSpan(child);
+
+                            var offset = Grid.GetColumnSpan(child) - 1;
+                            while (offset > 0)
+                            {
+                                skip[row, col + offset--] = true;
+                            }
+                        }
+                    }
+
+                    ApplyChildLayout(child);
+                }
+            }
         }
 
         public static readonly DependencyProperty ChildHorizontalAlignmentProperty =
             DependencyProperty.Register("ChildHorizontalAlignment", typeof(HorizontalAlignment?), typeof(AutoGrid),
-                new FrameworkPropertyMetadata((HorizontalAlignment?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnPropertyChanged)));
+                new FrameworkPropertyMetadata((HorizontalAlignment?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnChildHorizontalAlignmentChanged)));
 
         public static readonly DependencyProperty ChildMarginProperty =
             DependencyProperty.Register("ChildMargin", typeof(Thickness?), typeof(AutoGrid),
-                new FrameworkPropertyMetadata((Thickness?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnPropertyChanged)));
+                new FrameworkPropertyMetadata((Thickness?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnChildMarginChanged)));
 
         public static readonly DependencyProperty ChildVerticalAlignmentProperty =
             DependencyProperty.Register("ChildVerticalAlignment", typeof(VerticalAlignment?), typeof(AutoGrid),
-                new FrameworkPropertyMetadata((VerticalAlignment?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnPropertyChanged)));
+                new FrameworkPropertyMetadata((VerticalAlignment?)null, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnChildVerticalAlignmentChanged)));
 
         public static readonly DependencyProperty ColumnCountProperty =
             DependencyProperty.RegisterAttached("ColumnCount", typeof(int), typeof(AutoGrid),
@@ -328,8 +468,7 @@
             DependencyProperty.RegisterAttached("Rows", typeof(string), typeof(AutoGrid),
                 new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(RowsChanged)));
 
-        private int _rowOrColumnCount;
-        private bool _shouldReindex = true;
+        private bool shouldReindex = true;
 
         #region Overrides
 
@@ -342,87 +481,7 @@
         /// </returns>
         protected override Size MeasureOverride(Size constraint)
         {
-            var rowsFirst = Orientation == Orientation.Horizontal;
-
-            if (_shouldReindex || (IsAutoIndexing &&
-                ((rowsFirst && _rowOrColumnCount != ColumnDefinitions.Count) ||
-                (!rowsFirst && _rowOrColumnCount != RowDefinitions.Count))))
-            {
-                _shouldReindex = false;
-
-                if (IsAutoIndexing)
-                {
-                    _rowOrColumnCount = (rowsFirst) ? ColumnDefinitions.Count : RowDefinitions.Count;
-                    if (_rowOrColumnCount == 0) _rowOrColumnCount = 1;
-
-                    int cellCount = 0;
-                    foreach (UIElement child in Children)
-                    {
-                        cellCount += (rowsFirst) ? Grid.GetColumnSpan(child) : Grid.GetRowSpan(child);
-                    }
-
-                    if (rowsFirst) // define rows first, then columns
-                    {
-                        int newRowCount = ((cellCount - 1) / _rowOrColumnCount + 1);
-                        while (RowDefinitions.Count < newRowCount)
-                        {
-                            RowDefinitions.Add(new RowDefinition());
-                        }
-                        if (RowDefinitions.Count > newRowCount)
-                        {
-                            RowDefinitions.RemoveRange(newRowCount, RowDefinitions.Count - newRowCount);
-                        }
-                    }
-                    else // define columns first, then rows
-                    {
-                        int newColumnCount = ((cellCount - 1) / _rowOrColumnCount + 1);
-                        while (ColumnDefinitions.Count < newColumnCount)
-                        {
-                            ColumnDefinitions.Add(new ColumnDefinition());
-                        }
-                        if (ColumnDefinitions.Count > newColumnCount)
-                        {
-                            ColumnDefinitions.RemoveRange(newColumnCount, ColumnDefinitions.Count - newColumnCount);
-                        }
-                    }
-                }
-
-                //  Update children indices
-                int position = 0;
-                foreach (UIElement child in Children)
-                {
-                    if (IsAutoIndexing)
-                    {
-                        if (rowsFirst)
-                        {
-                            Grid.SetRow(child, position / _rowOrColumnCount);
-                            Grid.SetColumn(child, position % _rowOrColumnCount);
-                            position += Grid.GetColumnSpan(child);
-                        }
-                        else
-                        {
-                            Grid.SetRow(child, position % _rowOrColumnCount);
-                            Grid.SetColumn(child, position / _rowOrColumnCount);
-                            position += Grid.GetRowSpan(child);
-                        }
-                    }
-
-                    // Set margin and alignment
-                    if (ChildMargin != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.MarginProperty, ChildMargin.Value);
-                    }
-                    if (ChildHorizontalAlignment != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
-                    }
-                    if (ChildVerticalAlignment != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
-                    }
-                }
-            }
-
+            this.PerformLayout();
             return base.MeasureOverride(constraint);
         }
 
@@ -434,8 +493,7 @@
         /// <param name="visualRemoved">Identifies the visual child that's removed.</param>
         protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
         {
-            _shouldReindex = true;
-
+            shouldReindex = true;
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         }
 

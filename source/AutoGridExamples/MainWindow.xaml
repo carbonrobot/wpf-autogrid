@@ -2,16 +2,19 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WpfAutoGrid;assembly=WpfAutoGrid"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow"
+        Height="350"
+        Width="525">
     <ScrollViewer>
 
         <UniformGrid>
-            
+
             <!-- Grid of 4 colors -->
             <local:AutoGrid ColumnCount="2"
-                        ColumnWidth="*"
-                        Rows="1*,3*"
-                        ChildMargin="5">
+                            ColumnWidth="*"
+                            Rows="*,*"
+                            ChildMargin="2"
+                            Margin="5">
 
                 <Rectangle Fill="Blue" />
                 <Rectangle Fill="Red" />
@@ -20,46 +23,147 @@
 
             </local:AutoGrid>
 
-            <!-- Colspan Tests -->
+            <!-- Colspan Tests (default Orientation) -->
             <local:AutoGrid ColumnCount="3"
-                        ColumnWidth="*"
-                        RowCount="2"
-                        RowHeight="*"
-                        ChildMargin="5">
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
 
-                <Rectangle Fill="Blue" Grid.ColumnSpan="2" />
+                <Rectangle Fill="Blue"
+                           Grid.ColumnSpan="2" />
                 <Rectangle Fill="Red" />
                 <Rectangle Fill="Yellow" />
-                <Rectangle Fill="Green" Grid.ColumnSpan="2" />
+                <Rectangle Fill="Green"
+                           Grid.ColumnSpan="2" />
 
             </local:AutoGrid>
 
-            <!-- Rowspan Tests -->
-            <local:AutoGrid ColumnCount="2"
-                        ColumnWidth="*"
-                        RowCount="2"
-                        RowHeight="*"
-                        ChildMargin="5">
+            <!-- Colspan + Rowspan Tests (default Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
+
+                <Rectangle Fill="Blue"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow" />
+                <Rectangle Fill="Green"
+                           Grid.ColumnSpan="2" />
+
+            </local:AutoGrid>
+
+            <!-- Rowspan Tests, second child (default Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
 
                 <Rectangle Fill="Blue" />
-                <Rectangle Fill="Red" Grid.RowSpan="2" />
-                <Rectangle Fill="Green" />
-
-            </local:AutoGrid>
-
-            <!-- Colspan + Rowspan Tests -->
-            <local:AutoGrid ColumnCount="2"
-                        ColumnWidth="*"
-                        RowCount="3"
-                        RowHeight="*"
-                        ChildMargin="5">
-
-                <Rectangle Fill="Blue" Grid.ColumnSpan="2" />
-                <Rectangle Fill="Red" Grid.RowSpan="2" />
+                <Rectangle Fill="Red"
+                           Grid.RowSpan="2" />
                 <Rectangle Fill="Yellow" />
                 <Rectangle Fill="Green" />
+                <Rectangle Fill="Orange" />
 
             </local:AutoGrid>
+
+            <!-- Rowspan Tests, third child (default Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
+
+                <Rectangle Fill="Blue" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Green" />
+                <Rectangle Fill="Orange" />
+
+            </local:AutoGrid>
+
+            <!-- Rowspan Tests, sufu (default Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
+
+                <Rectangle Fill="Blue"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Green" />
+
+            </local:AutoGrid>
+
+            <!-- Rowspan Tests, first column (default Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Margin="5">
+
+                <Rectangle Fill="Blue" Grid.RowSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow" />
+                <Rectangle Fill="Green" />
+                <Rectangle Fill="Orange" />
+
+            </local:AutoGrid>
+
+
+            <!-- Colspan Tests, rowspan tests (Vertical Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="2"
+                            Orientation="Vertical"
+                            Margin="5">
+
+                <Rectangle Fill="Blue"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow"
+                           Grid.RowSpan="2" />
+                <Rectangle Fill="Green" />
+                <Rectangle Fill="Orange" />
+
+            </local:AutoGrid>
+
+            <!-- Colspan Tests, colspan tests (Vertical Orientation) -->
+            <local:AutoGrid ColumnCount="3"
+                            ColumnWidth="*"
+                            RowCount="2"
+                            RowHeight="*"
+                            ChildMargin="7"
+                            Orientation="Vertical"
+                            Margin="5">
+
+                <Rectangle Fill="Blue"
+                           Grid.ColumnSpan="2" />
+                <Rectangle Fill="Red" />
+                <Rectangle Fill="Yellow"
+                           Grid.RowSpan="2"
+                           Margin="7"/>
+                <Rectangle Fill="Green" />
+                <Rectangle Fill="Orange" />
+
+            </local:AutoGrid>
+
         </UniformGrid>
     </ScrollViewer>
 </Window>

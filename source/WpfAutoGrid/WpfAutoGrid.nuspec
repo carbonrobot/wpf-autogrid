@@ -9,7 +9,7 @@
     <projectUrl>http://carbonrobot.github.com/wpf-autogrid</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial Release</releaseNotes>
+    <releaseNotes>Better support for row span and column span. Corrected issues with dependency properties and multiple instances.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WPF Grid XAML Extensions</tags>
   </metadata>
