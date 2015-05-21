@@ -326,7 +326,7 @@
         /// </summary>
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((AutoGrid)d).shouldReindex = true;
+            
         }
 
         /// <summary>
@@ -361,66 +361,64 @@
         /// </summary>
         private void PerformLayout()
         {
-            if (shouldReindex)
+            var fillRowFirst = this.Orientation == Orientation.Horizontal;
+            var rowCount = this.RowDefinitions.Count;
+            var colCount = this.ColumnDefinitions.Count;
+
+            if (rowCount == 0 || colCount == 0)
+                return;
+
+            var position = 0;
+            var skip = new bool[rowCount, colCount];
+            foreach (UIElement child in Children)
             {
-                shouldReindex = false;
-
-                var fillRowFirst = this.Orientation == Orientation.Horizontal;
-                var rowCount = this.RowDefinitions.Count;
-                var colCount = this.ColumnDefinitions.Count;
-
-                var position = 0;
-                var skip = new bool[rowCount, colCount];
-                foreach (UIElement child in Children)
+                if (IsAutoIndexing)
                 {
-                    if (IsAutoIndexing)
+                    if (fillRowFirst)
                     {
-                        if (fillRowFirst)
+                        var row = Clamp(position / colCount, rowCount - 1);
+                        var col = Clamp(position % colCount, colCount - 1);
+                        if (skip[row, col])
                         {
-                            var row = Clamp(position / colCount, rowCount - 1);
-                            var col = Clamp(position % colCount, colCount - 1);
-                            if (skip[row, col])
-                            {
-                                position++;
-                                row = (position / colCount);
-                                col = (position % colCount);
-                            }
-
-                            Grid.SetRow(child, row);
-                            Grid.SetColumn(child, col);
-                            position += Grid.GetColumnSpan(child);
-
-                            var offset = Grid.GetRowSpan(child) - 1;
-                            while (offset > 0)
-                            {
-                                skip[row + offset--, col] = true;
-                            }
+                            position++;
+                            row = (position / colCount);
+                            col = (position % colCount);
                         }
-                        else
+
+                        Grid.SetRow(child, row);
+                        Grid.SetColumn(child, col);
+                        position += Grid.GetColumnSpan(child);
+
+                        var offset = Grid.GetRowSpan(child) - 1;
+                        while (offset > 0)
                         {
-                            var row = Clamp(position % rowCount, rowCount - 1);
-                            var col = Clamp(position / rowCount, colCount - 1);
-                            if (skip[row, col])
-                            {
-                                position++;
-                                row = position % rowCount;
-                                col = position / rowCount;
-                            }
-
-                            Grid.SetRow(child, row);
-                            Grid.SetColumn(child, col);
-                            position += Grid.GetRowSpan(child);
-
-                            var offset = Grid.GetColumnSpan(child) - 1;
-                            while (offset > 0)
-                            {
-                                skip[row, col + offset--] = true;
-                            }
+                            skip[row + offset--, col] = true;
                         }
                     }
+                    else
+                    {
+                        var row = Clamp(position % rowCount, rowCount - 1);
+                        var col = Clamp(position / rowCount, colCount - 1);
+                        if (skip[row, col])
+                        {
+                            position++;
+                            row = position % rowCount;
+                            col = position / rowCount;
+                        }
 
-                    ApplyChildLayout(child);
+                        Grid.SetRow(child, row);
+                        Grid.SetColumn(child, col);
+                        position += Grid.GetRowSpan(child);
+
+                        var offset = Grid.GetColumnSpan(child) - 1;
+                        while (offset > 0)
+                        {
+                            skip[row, col + offset--] = true;
+                        }
+                    }
                 }
+
+                ApplyChildLayout(child);
             }
         }
 
@@ -438,7 +436,7 @@
 
         public static readonly DependencyProperty ColumnCountProperty =
             DependencyProperty.RegisterAttached("ColumnCount", typeof(int), typeof(AutoGrid),
-                new FrameworkPropertyMetadata(-1, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(ColumnCountChanged)));
+                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(ColumnCountChanged)));
 
         public static readonly DependencyProperty ColumnsProperty =
             DependencyProperty.RegisterAttached("Columns", typeof(string), typeof(AutoGrid),
@@ -450,15 +448,15 @@
 
         public static readonly DependencyProperty IsAutoIndexingProperty =
             DependencyProperty.Register("IsAutoIndexing", typeof(bool), typeof(AutoGrid),
-                new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnPropertyChanged)));
+                new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register("Orientation", typeof(Orientation), typeof(AutoGrid),
-                new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnPropertyChanged)));
+                new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public static readonly DependencyProperty RowCountProperty =
             DependencyProperty.RegisterAttached("RowCount", typeof(int), typeof(AutoGrid),
-                new FrameworkPropertyMetadata(-1, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(RowCountChanged)));
+                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(RowCountChanged)));
 
         public static readonly DependencyProperty RowHeightProperty =
             DependencyProperty.RegisterAttached("RowHeight", typeof(GridLength), typeof(AutoGrid),
@@ -467,8 +465,6 @@
         public static readonly DependencyProperty RowsProperty =
             DependencyProperty.RegisterAttached("Rows", typeof(string), typeof(AutoGrid),
                 new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(RowsChanged)));
-
-        private bool shouldReindex = true;
 
         #region Overrides
 
@@ -484,19 +480,7 @@
             this.PerformLayout();
             return base.MeasureOverride(constraint);
         }
-
-        /// <summary>
-        /// Called when the visual children of a <see cref="Grid"/> element change.
-        /// <remarks>Used to mark that the grid children have changed.</remarks>
-        /// </summary>
-        /// <param name="visualAdded">Identifies the visual child that's added.</param>
-        /// <param name="visualRemoved">Identifies the visual child that's removed.</param>
-        protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
-        {
-            shouldReindex = true;
-            base.OnVisualChildrenChanged(visualAdded, visualRemoved);
-        }
-
+        
         #endregion Overrides
     }
 }

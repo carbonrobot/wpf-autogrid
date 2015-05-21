@@ -164,6 +164,30 @@
 
             </local:AutoGrid>
 
+            <!-- Binding Test -->
+            <local:AutoGrid Rows="25*,75*"
+                            Columns="*"
+                            ChildMargin="5">
+                <ComboBox Name="uxCombo" SelectedIndex="0">
+                    <ComboBoxItem Content="1"></ComboBoxItem>
+                    <ComboBoxItem Content="2"></ComboBoxItem>
+                    <ComboBoxItem Content="3"></ComboBoxItem>
+                    <ComboBoxItem Content="4"></ComboBoxItem>
+                </ComboBox>
+                <local:AutoGrid ColumnCount="{Binding ElementName=uxCombo, Path=SelectedItem.Content}"
+                            ColumnWidth="*"
+                            RowHeight="*"
+                            RowCount="4"
+                            ChildMargin="1">
+
+                    <Rectangle Fill="Blue" />
+                    <Rectangle Fill="Red" />
+                    <Rectangle Fill="Green" />
+                    <Rectangle Fill="Yellow" />
+
+                </local:AutoGrid>
+            </local:AutoGrid>
+
         </UniformGrid>
     </ScrollViewer>
 </Window>
