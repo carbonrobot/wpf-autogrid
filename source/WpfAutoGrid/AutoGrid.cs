@@ -372,7 +372,8 @@
             var skip = new bool[rowCount, colCount];
             foreach (UIElement child in Children)
             {
-                if (IsAutoIndexing)
+                var childIsCollapsed = child.Visibility == Visibility.Collapsed;
+                if (IsAutoIndexing && !childIsCollapsed)
                 {
                     if (fillRowFirst)
                     {
