@@ -84,3 +84,15 @@ In this example, labels will fall in the first row, and textboxes will be in the
 </AutoGrid>
 ```
 
+#### Support for collapsed children
+
+Collapsed elements will be removed from the flow, hidden elements will still occupy space in the grid
+
+```
+<AutoGrid RowCount="2" RowHeight="35" Columns="100,auto">
+  <Label />                             <!-- Col=0, Row=0 -->
+  <TextBox />                           <!-- Col=1, Row=0 -->
+  <Label Visibility="Collapsed" />
+  <TextBox />                           <!-- Col=0, Row=1 -->
+</AutoGrid>
+```

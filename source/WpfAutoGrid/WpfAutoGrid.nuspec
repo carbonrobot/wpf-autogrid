@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/carbonrobot/wpf-autogrid</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Better support data binding on autogrid properties.</releaseNotes>
+    <releaseNotes>Support for collapsed children.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WPF Grid XAML Extensions</tags>
   </metadata>
