@@ -49,13 +49,13 @@ Explicit assignment of columns and rows still works too. This allows you to upgr
 #### Defining a even spaced 6x6 grid with a default margin of 10 for all cells
 
 ```xaml
-<local:AutoGrid ColumnCount="6" ColumnWidth="*" RowHeight="*" RowCount="6" ChildMargin="10" />
+<AutoGrid ColumnCount="6" ColumnWidth="*" RowHeight="*" RowCount="6" ChildMargin="10" />
 ```
 
 #### Grid with relative based column widths and fixed row height
 
 ```xaml
-<local:AutoGrid Columns="2*,5*" RowCount="6" RowHeight="25" />
+<AutoGrid Columns="2*,5*" RowCount="6" RowHeight="25" />
 ```
 
 #### Orientation="Horizontal" (default)
