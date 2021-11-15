@@ -168,7 +168,7 @@
 
             var defs = Parse((string)e.NewValue);
             foreach (var def in defs)
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = def });
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = def.Length, SharedSizeGroup = def.SharedSizeGroup });
         }
 
         /// <summary>
@@ -206,13 +206,14 @@
         /// <summary>
         /// Parse an array of grid lengths from comma delim text
         /// </summary>
-        public static GridLength[] Parse(string text)
+        public static GridLengthInfo[] Parse(string text)
         {
             var tokens = text.Split(',');
-            var definitions = new GridLength[tokens.Length];
+            var definitions = new GridLengthInfo[tokens.Length];
             for (var i = 0; i < tokens.Length; i++)
             {
-                var str = tokens[i];
+                var parts = tokens[i].Split('(', ')');
+                var str = parts[0];
                 double value;
 
                 // ratio
@@ -221,19 +222,24 @@
                     if (!double.TryParse(str.Replace("*", ""), out value))
                         value = 1.0;
 
-                    definitions[i] = new GridLength(value, GridUnitType.Star);
+                    definitions[i] = new GridLengthInfo() { Length = new GridLength(value, GridUnitType.Star) };
                     continue;
                 }
 
                 // pixels
                 if (double.TryParse(str, out value))
                 {
-                    definitions[i] = new GridLength(value);
+                    definitions[i] = new GridLengthInfo() { Length = new GridLength(value) };
                     continue;
                 }
 
                 // auto
-                definitions[i] = GridLength.Auto;
+                definitions[i] = new GridLengthInfo() { Length = GridLength.Auto };
+
+                if (parts.Length > 1)
+                {
+                    definitions[i].SharedSizeGroup = parts[1];
+                }
             }
             return definitions;
         }
@@ -273,7 +279,7 @@
 
             var defs = Parse((string)e.NewValue);
             foreach (var def in defs)
-                grid.RowDefinitions.Add(new RowDefinition() { Height = def });
+                grid.RowDefinitions.Add(new RowDefinition() { Height = def.Length, SharedSizeGroup = def.SharedSizeGroup });
         }
 
         /// <summary>
@@ -326,7 +332,7 @@
         /// </summary>
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -481,7 +487,13 @@
             this.PerformLayout();
             return base.MeasureOverride(constraint);
         }
-        
+
         #endregion Overrides
+    }
+
+    public class GridLengthInfo
+    {
+        public GridLength Length { get; set; }
+        public string SharedSizeGroup { get; set; }
     }
 }
