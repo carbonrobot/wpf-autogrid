@@ -1,6 +1,10 @@
 wpf-autogrid
 ============
 
+## Maintenance Status
+
+**Inactive:** This project is no longer maintained. Feel free to fork this project.
+
 A flexible, easy to configure replacement for the standard WPF Grid control
 
 Now Available on NuGet! https://www.nuget.org/packages/WpfAutoGrid/
